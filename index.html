@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Talks 2025</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        #search-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        #search-box {
+            padding: 0.8rem;
+            width: 60%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .schedule {
+            list-style: none;
+            padding: 0;
+        }
+        .schedule-item {
+            background-color: #fff;
+            border-left: 5px solid #007bff;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .schedule-item:hover {
+            transform: translateY(-5px);
+        }
+        .schedule-item.break {
+            border-left-color: #6c757d;
+            text-align: center;
+            font-weight: bold;
+        }
+        .time {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1.1rem;
+        }
+        .break .time {
+             color: #6c757d;
+        }
+        .title {
+            font-size: 1.8rem;
+            margin: 0.5rem 0;
+        }
+        .speakers {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        .categories {
+            margin-top: 1rem;
+        }
+        .category {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Tech Talks 2025</h1>
+        <p>A One-Day Virtual Event</p>
+    </header>
+
+    <div class="container">
+        <div id="search-container">
+            <input type="text" id="search-box" placeholder="Search by category (e.g., AI, Web)...">
+        </div>
+
+        <ul class="schedule" id="schedule-list">
+            <!-- Schedule will be rendered here by JavaScript -->
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Tech Talks. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const talks = [
+            {
+                startTime: "10:00 AM",
+                endTime: "11:00 AM",
+                title: "The Future of Artificial Intelligence",
+                speakers: ["Dr. Evelyn Reed"],
+                categories: ["AI", "Machine Learning", "Future Tech"],
+                duration: "1 hour",
+                description: "A deep dive into the next generation of AI and its potential impact on society."
+            },
+            {
+                startTime: "11:10 AM",
+                endTime: "12:10 PM",
+                title: "Quantum Computing: A Primer",
+                speakers: ["Prof. Kenji Tanaka"],
+                categories: ["Quantum Computing", "Physics"],
+                duration: "1 hour",
+                description: "An introduction to the mind-bending world of quantum computing and its applications."
+            },
+            {
+                startTime: "12:20 PM",
+                endTime: "1:20 PM",
+                title: "Building Scalable Web Applications",
+                speakers: ["Maria Rodriguez", "David Chen"],
+                categories: ["Web Development", "Scalability", "Architecture"],
+                duration: "1 hour",
+                description: "Strategies and best practices for designing and building web applications that can handle millions of users."
+            },
+            {
+                type: 'break',
+                startTime: '1:20 PM',
+                endTime: '2:20 PM',
+                title: 'Lunch Break'
+            },
+            {
+                startTime: "2:20 PM",
+                endTime: "3:20 PM",
+                title: "The Ethics of Genetic Engineering",
+                speakers: ["Dr. Lena Petrova"],
+                categories: ["Bioethics", "Genetics"],
+                duration: "1 hour",
+                description: "A thought-provoking discussion on the moral and ethical implications of gene editing technologies."
+            },
+            {
+                startTime: "3:30 PM",
+                endTime: "4:30 PM",
+                title: "Cybersecurity in a Post-Quantum World",
+                speakers: ["Alex Miller"],
+                categories: ["Cybersecurity", "Quantum Computing", "Cryptography"],
+                duration: "1 hour",
+                description: "How to prepare for the security challenges that will arise with the advent of quantum computers."
+            },
+            {
+                startTime: "4:40 PM",
+                endTime: "5:40 PM",
+                title: "The Art of Data Visualization",
+                speakers: ["Chloe Williams", "Ben Carter"],
+                categories: ["Data Science", "Design", "Visualization"],
+                duration: "1 hour",
+                description: "Learn how to turn complex data into beautiful and insightful visualizations."
+            }
+        ];
+
+        const scheduleList = document.getElementById('schedule-list');
+        const searchBox = document.getElementById('search-box');
+
+        function renderSchedule(talksToRender) {
+            scheduleList.innerHTML = '';
+            
+            let lastTalkEndTime = '10:00 AM';
+
+            talksToRender.forEach((talk, index) => {
+                const talkStartTime = talk.startTime;
+
+                if (index > 0 && talksToRender[index-1].type !== 'break') {
+                    const prevTalk = talksToRender[index-1];
+                    const prevTalkEndTime = prevTalk.endTime;
+                    if(talk.startTime.split(':')[0] !== prevTalk.endTime.split(':')[0] || talk.startTime.split(':')[1].split(' ')[0] - prevTalk.endTime.split(':')[1].split(' ')[0] > 0){
+                         const transitionTime = 10;
+                         const li = document.createElement('li');
+                         li.className = 'schedule-item break';
+                         li.innerHTML = `<div class="time">${prevTalkEndTime} - ${talk.startTime}</div><div>Transition</div>`;
+                         scheduleList.appendChild(li);
+                    }
+                }
+
+
+                const li = document.createElement('li');
+                li.className = 'schedule-item';
+
+                if (talk.type === 'break') {
+                    li.classList.add('break');
+                    li.innerHTML = `
+                        <div class="time">${talk.startTime} - ${talk.endTime}</div>
+                        <div>${talk.title}</div>
+                    `;
+                } else {
+                    li.innerHTML = `
+                        <div class="time">${talk.startTime} - ${talk.endTime}</div>
+                        <h2 class="title">${talk.title}</h2>
+                        <div class="speakers">${talk.speakers.join(', ')}</div>
+                        <p>${talk.description}</p>
+                        <div class="categories">
+                            ${talk.categories.map(cat => `<span class="category">${cat}</span>`).join('')}
+                        </div>
+                    `;
+                }
+                scheduleList.appendChild(li);
+                if (talk.type !== 'break') {
+                   lastTalkEndTime = talk.endTime;
+                }
+            });
+        }
+
+        searchBox.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredTalks = talks.filter(talk => {
+                if (talk.type === 'break') {
+                    return true;
+                }
+                return talk.categories.some(cat => cat.toLowerCase().includes(searchTerm));
+            });
+            renderSchedule(filteredTalks);
+        });
+
+        // Initial render
+        renderSchedule(talks);
+    </script>
+</body>
+</html>
